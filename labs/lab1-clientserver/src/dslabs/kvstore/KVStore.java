@@ -66,11 +66,7 @@ public class KVStore implements Application {
     if (command instanceof Get) {
       Get g = (Get) command;
       String result = store.get(g.key);
-      if (result == null) {
-        return new KeyNotFound();
-      } else {
-        return new GetResult(result);
-      }
+      return (result == null) ? new KeyNotFound() : new GetResult(result);
     }
 
     if (command instanceof Put) {
@@ -82,11 +78,7 @@ public class KVStore implements Application {
     if (command instanceof Append) {
       Append a = (Append) command;
       String result = store.get(a.key);
-      if (result != null) {
-        result = result + a.value;
-      } else {
-        result = a.value;
-      }
+      result = (result == null) ? a.value : result + a.value;
       store.put(a.key, result);
       return new AppendResult(result);
     }
